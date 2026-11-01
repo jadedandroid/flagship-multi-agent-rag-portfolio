@@ -10,6 +10,10 @@ The home page is a project directory. Detailed case studies use normal document 
 
 Shared presentation styles live in `site.css`.
 
+## Hosting
+
+`.github/workflows/pages.yml` publishes the static site to GitHub Pages on pushes to `main`. The expected URL is `https://jadedandroid.github.io/flagship-multi-agent-rag-portfolio/` after Pages is enabled and the first Actions deployment succeeds.
+
 ## Local RAG Demonstration
 
 The portfolio query panel executes a deterministic, browser-local extractive RAG pipeline. It plans bounded subqueries, ranks local documents with TF-IDF cosine similarity and BM25-style keyword scoring, combines rankings with reciprocal-rank fusion, validates exact quote/source membership, and critiques retrieved source metadata for conflicts, archived editions, and instruction-like text.
