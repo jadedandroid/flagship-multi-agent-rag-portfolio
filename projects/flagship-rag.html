@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Flagship RAG System | Jade Decordova</title>
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+<header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="../index.html">Jade Decordova <span>· NYC</span></a><nav aria-label="Main navigation"><a href="../index.html">Projects</a><a href="cloud-remediation.html">Cloud remediation</a><a href="payment-mcp.html">Payment MCP</a></nav><a class="button" href="mailto:lacroixjaded@gmail.com">Contact</a></div></header>
+<main class="wrap">
+  <header class="page-hero"><p class="eyebrow">FLAGSHIP PROJECT · LOCAL DEMONSTRATION</p><h1>Grounded answers, with their evidence attached.</h1><p class="lede">A runnable, deterministic extractive RAG pipeline: bounded planning, hybrid local retrieval, exact-span checks, explicit contradiction handling, and refusal when evidence is weak.</p><p class="notice">The corpus contains authored demonstration fixtures, not official NYC records or legal guidance. No model or remote payment/data service is called.</p></header>
+
+  <section class="section"><div class="section-heading"><div><p class="eyebrow">LIVE QUERY</p><h2>Run the local pipeline</h2></div><span class="tag">TF-IDF · BM25 · RRF</span></div>
+    <form id="queryForm" class="query-form"><label for="queryInput">Question<textarea id="queryInput" rows="2" maxlength="500" required placeholder="Compare the application review fee in both schedules"></textarea></label><button class="button" id="runBtn" type="submit">Run query</button></form>
+    <div id="chips" class="samples" aria-label="Sample questions"></div>
+    <div class="result-grid"><section class="trace-panel"><h3>Execution trace</h3><div id="log" class="trace" aria-live="polite">Enter a question to execute the pipeline.</div></section><section class="answer-panel"><h3>Verified response</h3><div id="answerArea">Run a query to inspect source-backed excerpts or a refusal.</div><details><summary>Execution and schema boundary inspector</summary><pre id="inspector">No query executed yet.</pre></details></section></div>
+  </section>
+
+  <section class="section"><div class="section-heading"><div><p class="eyebrow">EVALUATION</p><h2>Adversarial checks</h2></div><button id="runEvalBtn" class="button secondary" type="button">Run suite</button><div class="filters" id="filters"><button class="filter active" data-f="all" type="button">All</button><button class="filter" data-f="pass" type="button">Passed</button><button class="filter" data-f="caught" type="button">Failed</button></div></div><div class="metrics"><article><b id="metricPassRate">Not run</b><span>Assertion pass rate</span></article><article><b id="metricCases">Not run</b><span>Passed / total</span></article><article><b id="metricSchema">Not run</b><span>Schema checks passed</span></article><article><b id="metricLatency">Not run</b><span>Local p50 runtime</span><small id="metricLatencyDetail"></small></article></div><p id="evalSummary" class="muted" aria-live="polite">Suite has not run.</p><div class="table-scroll"><table><thead><tr><th>Case</th><th>Probe</th><th>Observed</th><th>Status</th></tr></thead><tbody id="evalBody"></tbody></table></div></section>
+
+  <section class="section"><p class="eyebrow">DESIGN NOTES</p><h2>What this proves, and what it does not</h2><div class="columns"><article><h3>Implemented</h3><p>Queries split into at most three subqueries with a bounded retrieval budget. TF-IDF cosine and BM25-style keyword ranking are combined with reciprocal-rank fusion. Responses use exact retrieved text; the validator checks schema, source membership, and exact quote equality. The critic identifies fixture-tagged conflicts and archived versions and flags instruction-like content.</p></article><article><h3>Not claimed</h3><p>This is not LangGraph, a generative model, a dense embedding service, pgvector, or a live NYC-data connector. Injection checks use explicit patterns; the authored test corpus cannot establish broad semantic faithfulness. The 27 assertions and browser latency measure this demo only.</p></article></div></section>
+</main><footer class="wrap footer"><a href="../index.html">← All projects</a><span>Jade Decordova · Portfolio</span></footer><div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script type="module" src="../portfolio-ui.mjs"></script>
+</body></html>

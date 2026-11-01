@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Cloud Incident Remediation | Jade Decordova</title>
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+<header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="../index.html">Jade Decordova <span>· NYC</span></a><nav aria-label="Main navigation"><a href="../index.html">Projects</a><a href="flagship-rag.html">Flagship RAG</a><a href="payment-mcp.html">Payment MCP</a></nav><a class="button" href="mailto:lacroixjaded@gmail.com">Contact</a></div></header>
+<main class="wrap">
+  <header class="page-hero"><p class="eyebrow">PROJECT 02 · SIMULATION</p><h1>Incident response that waits for human approval.</h1><p class="lede">An event-driven cloud-cost and incident-remediation design: anomaly intake, bounded diagnosis, proposed intervention, explicit approval, simulated execution, and an append-only audit record.</p><p class="notice">This page describes a simulation design only. It has no cloud credentials and cannot alter infrastructure.</p></header>
+  <section class="section"><p class="eyebrow">CONTROL FLOW</p><h2>Propose, review, verify</h2><ol class="flow"><li><b>Signal</b><span>Parse a synthetic CloudWatch/Prometheus event and validate its schema, timestamp, and resource identifiers.</span></li><li><b>Diagnose</b><span>Correlate the signal with a bounded set of known runbooks; preserve evidence and uncertainty.</span></li><li><b>Plan</b><span>Draft a reversible action, estimated blast radius, expected cost impact, rollback, and verification checks.</span></li><li><b>Approve</b><span>Require an authenticated human to review and approve the exact plan digest. No approval means no action.</span></li><li><b>Simulate and verify</b><span>Apply the change to a local scenario model and append the result and verification outcome to the audit ledger.</span></li></ol></section>
+  <section class="section columns"><article><p class="eyebrow">SAFETY BOUNDARY</p><h2>No live operations</h2><p>The portfolio version does not connect to AWS, execute Lambda or Step Functions, inspect real accounts, or prune resources. A future adapter must use least-privilege credentials, idempotency, scoped approvals, independent post-action verification, and an emergency stop.</p></article><article><p class="eyebrow">AUDIT MODEL</p><h2>Decision provenance</h2><p>A production ledger would record immutable event IDs, timestamps, normalized input hashes, evidence references, proposed-action digest, approval identity and token ID, execution result, and verification checks. Do not store raw cloud credentials or approval secrets in the ledger.</p></article></section>
+</main><footer class="wrap footer"><a href="../index.html">← All projects</a><span>Jade Decordova · Portfolio</span></footer>
+</body></html>

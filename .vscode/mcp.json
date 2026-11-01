@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "business-payment-setup": {
+      "type": "stdio",
+      "command": "bash",
+      "args": ["${workspaceFolder}/payment-mcp/run-server.sh"],
+      "env": {
+        "PAYMENT_PROJECT_ROOT": "${workspaceFolder}"
+      }
+    }
+  }
+}
