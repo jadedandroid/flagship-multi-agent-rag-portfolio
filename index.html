@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>Jade Decordova — Multi-Agent RAG Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700;6..72,800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f0; --bg2:#ffffff; --bg3:#eef2ef; --ink:#121714; --ink2:#3a4540; --muted:#6b7770;
+  --line:#dde3de; --line2:#cbd5cd;
+  --teal:#0f766e; --teal2:#0b5e57; --tealBg:#e6f2f0;
+  --amber:#b45309; --amberBg:#fef3c7;
+  --green:#15803d; --red:#b91c1c; --card:#ffffff;
+  --shadow:0 10px 30px rgba(18,23,20,.08);
+  --radius:16px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0d1210; --bg2:#131a17; --bg3:#18211d; --ink:#edf2ee; --ink2:#c8d2cc; --muted:#8fa098;
+    --line:#24302a; --line2:#2f4037; --teal:#2dd4bf; --teal2:#5eead4; --tealBg:#12302c;
+    --amber:#f59e0b; --amberBg:#2a210a; --green:#4ade80; --red:#f87171; --card:#141c18;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation:none!important; transition:none!important} }
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6}
+a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+.brand{font-weight:700;letter-spacing:-.02em;color:var(--ink);font-size:15px}
+.brand span{color:var(--teal)}
+.nav{display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;font-weight:500}
+@media(max-width:640px){.nav{display:none}.brand{font-size:14px}}
+.nav a{color:var(--ink2)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--teal);background:var(--teal);color:#fff;padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;cursor:pointer}
+.btn.secondary{background:transparent;color:var(--teal)}
+.btn:hover{opacity:.92;text-decoration:none}
+@media (prefers-color-scheme: dark){ .btn{color:#06201c} .btn.secondary{color:var(--teal)} }
+
+/* HERO */
+.hero{padding:52px 0 28px}
+.hero-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:28px}
+@media(max-width:820px){.hero-grid{grid-template-columns:1fr}}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);background:var(--tealBg);border:1px solid var(--line);padding:6px 10px;border-radius:999px}
+.eyebrow i{width:7px;height:7px;background:var(--teal);border-radius:50%;display:inline-block}
+h1{font-family:"Newsreader",Georgia,serif;font-size:clamp(42px,6vw,72px);line-height:.95;letter-spacing:-.03em;margin:18px 0 14px;font-weight:800}
+h1 em{font-style:italic;font-weight:500;color:var(--teal2)}
+.lede{font-size:18px;line-height:1.65;color:var(--ink2);max-width:640px}
+.lede strong{color:var(--ink)}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.hero-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.hero-card h3{margin:0 0 12px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.stat:first-of-type{border-top:0;padding-top:2px}
+.stat b{font-size:20px;line-height:1;color:var(--ink)}
+.stat span{font-size:13px;color:var(--muted);text-align:right;max-width:150px;line-height:1.35}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.pill{font-size:12.5px;font-weight:600;border:1px solid var(--line2);background:var(--bg3);padding:6px 10px;border-radius:999px;color:var(--ink2)}
+
+/* SECTIONS */
+.section{padding:42px 0}
+.section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px;flex-wrap:wrap}
+.section-head h2{font-family:"Newsreader",Georgia,serif;font-size:36px;line-height:1;letter-spacing:-.02em;margin:8px 0 6px}
+.section-head p{margin:0;color:var(--muted);max-width:560px}
+.kicker{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* ARCHITECTURE */
+.arch{padding:22px;overflow:hidden}
+.arch-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+@media(max-width:860px){.arch-flow{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.arch-flow{grid-template-columns:1fr}}
+.agent{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--bg2);position:relative}
+.agent.active{border-color:var(--teal);box-shadow:0 0 0 3px color-mix(in srgb,var(--teal) 18%, transparent)}
+.agent-num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:13px;font-weight:700;margin-bottom:10px}
+.agent h4{margin:0 0 6px;font-size:15px}
+.agent p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.55}
+.agent code{font-size:11px;background:var(--bg3);padding:2px 6px;border-radius:999px;color:var(--teal);font-weight:600}
+.arrow{text-align:center;color:var(--muted);font-size:18px;line-height:1;padding:2px}
+.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+@media(max-width:760px){.principles{grid-template-columns:1fr}}
+.principle{padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--bg2)}
+.principle b{display:block;margin-bottom:6px}
+.principle p{margin:0;font-size:14px;color:var(--muted)}
+
+/* DEMO */
+.demo{overflow:hidden}
+.demo-head{padding:20px 20px 0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
+.chip{border:1px solid var(--line2);background:var(--bg2);color:var(--ink);padding:9px 12px;border-radius:999px;font-size:13.5px;font-weight:600;cursor:pointer;text-align:left}
+.chip.selected{border-color:var(--teal);background:var(--tealBg);color:var(--teal2)}
+.demo-body{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line);margin-top:18px}
+@media(max-width:860px){.demo-body{grid-template-columns:1fr}}
+.trace{padding:20px;border-right:1px solid var(--line);background:var(--bg2)}
+@media(max-width:860px){.trace{border-right:0;border-bottom:1px solid var(--line)}}
+.trace h4,.answer h4{margin:0 0 12px;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.log{font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.7;background:#0f1513;color:#c7e8dd;border-radius:10px;padding:14px;min-height:210px;white-space:pre-wrap;word-break:break-word}
+@media (prefers-color-scheme: light){ .log{background:#111815} }
+.log .dim{color:#7aa99a}.log .ok{color:#5eead4}.log .warn{color:#fbbf24}
+.answer{padding:20px}
+.answer-text{font-size:15.5px;line-height:1.7;color:var(--ink2)}
+.answer-text sup{color:var(--teal);font-weight:700}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.badge{font-size:12px;font-weight:700;padding:6px 9px;border-radius:999px;border:1px solid var(--line)}
+.badge.pass{background:#dcfce7;color:#166534;border-color:#bbf7d0}
+@media (prefers-color-scheme: dark){.badge.pass{background:#12291a;color:#86efac;border-color:#23402e}}
+.badge.info{background:var(--tealBg);color:var(--teal2)}
+.sources{display:grid;gap:10px;margin-top:12px}
+.source{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--bg2)}
+.source b{font-size:13.5px;display:block}
+.source p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.source-head{display:flex;justify-content:space-between;gap:10px}
+.score{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--teal);font-weight:700;white-space:nowrap}
+
+/* EVALS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:860px){.metrics{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.metrics{grid-template-columns:1fr}}
+.metric{padding:18px}
+.metric b{font-size:32px;line-height:1;letter-spacing:-.03em;display:block}
+.metric span{font-size:13px;color:var(--muted);display:block;margin-top:6px;line-height:1.4}
+.metric small{font-size:12px;font-weight:700;color:var(--green)}
+.bars{padding:20px}
+.bar-row{display:grid;grid-template-columns:170px 1fr 52px;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line);font-size:13.5px}
+.bar-row:first-of-type{border-top:0}
+@media(max-width:600px){.bar-row{grid-template-columns:1fr;gap:6px}}
+.track{height:10px;background:var(--bg3);border-radius:999px;overflow:hidden}
+.fill{height:100%;background:var(--teal);border-radius:999px}
+.fill.amber{background:var(--amber)}
+.table-wrap{overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:14px 16px;border-bottom:1px solid var(--line);background:var(--bg2)}
+td{padding:14px 16px;border-top:1px solid var(--line);vertical-align:top}
+tr:first-child td{border-top:0}
+.status{font-size:12px;font-weight:700;padding:4px 8px;border-radius:999px;white-space:nowrap}
+.status.pass{background:#dcfce7;color:#166534}
+.status.caught{background:var(--amberBg);color:var(--amber)}
+@media(max-width:700px){ table,thead,tbody,tr,th,td{display:block;width:100%} thead{display:none} td{border-top:0;padding:8px 16px} tr{padding:10px 0;border-top:1px solid var(--line)} tr:first-child{border-top:0} }
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter{border:1px solid var(--line2);background:var(--bg2);padding:7px 11px;border-radius:999px;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink)}
+.filter.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* PROJECTS / TIMELINE */
+.project{padding:20px}
+.project h3{margin:0 0 8px;font-size:19px;letter-spacing:-.01em}
+.project p{margin:0;color:var(--muted);font-size:14.5px}
+.project ul{margin:12px 0 0;padding-left:18px;color:var(--ink2);font-size:14px}
+.timeline{display:grid;gap:0}
+.role{display:grid;grid-template-columns:170px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--line)}
+.role:first-child{border-top:0;padding-top:4px}
+@media(max-width:640px){.role{grid-template-columns:1fr;gap:4px}}
+.role-date{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muted);padding-top:3px}
+.role h3{margin:0;font-size:16px}.role h3 span{color:var(--teal)}
+.role p{margin:4px 0 0;color:var(--muted);font-size:14.5px;max-width:680px}
+.stack{display:flex;flex-wrap:wrap;gap:8px}
+.footer{padding:28px 0 40px;border-top:1px solid var(--line);margin-top:10px}
+.footer-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:20px}
+@media(max-width:700px){.footer-grid{grid-template-columns:1fr}}
+.small{font-size:13px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:999px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:50}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--teal) 55%, transparent);outline-offset:2px}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap topbar-inner">
+  <a class="brand" href="#top">Jade Decordova <span>· NYC</span></a>
+  <nav class="nav" aria-label="Portfolio">
+    <a href="#flagship">Flagship</a><a href="#demo">Walkthrough</a><a href="#evals">Evals</a><a href="#work">Work</a><a href="#experience">Experience</a>
+  </nav>
+  <a class="btn" href="mailto:lacroixjaded@gmail.com">Contact</a>
+</div></header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="wrap hero">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow"><i></i> Senior Software Engineer — Agentic AI</span>
+        <h1>Production AI that <em>shows its work.</em></h1>
+        <p class="lede">I'm <strong>Jade Decordova</strong>, a New York-based engineer with 6+ years building fast, reliable backend systems and data pipelines in <strong>Python and React / TypeScript</strong>. Most recently at <strong>Google</strong>, I built agentic AI and multi-agent RAG systems — and I specialize in the unglamorous part that makes them trustworthy: <strong>strict validation, adversarial evals, and deterministic behavior under real traffic.</strong></p>
+        <p class="lede" style="font-size:15.5px;margin-top:12px">I bridge frontier research and messy enterprise reality — embedding with teams to turn ambiguous friction into resilient production systems, and taking full ownership from requirements to rollout.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#demo">Try the flagship demo ↓</a>
+          <a class="btn secondary" href="#evals">See the eval design</a>
+          <button class="btn secondary" id="copyEmail" type="button">Copy email</button>
+        </div>
+        <div class="pills" aria-label="Core skills">
+          <span class="pill">LangGraph</span><span class="pill">Multi-Agent RAG</span><span class="pill">Python</span><span class="pill">React / TypeScript</span><span class="pill">AWS · GCP</span><span class="pill">Kubernetes</span><span class="pill">PostgreSQL</span>
+        </div>
+      </div>
+      <aside class="hero-card" aria-label="Highlights">
+        <h3>At a glance</h3>
+        <div class="stat"><b>6+ yrs</b><span>Software engineering, full-stack &amp; platform</span></div>
+        <div class="stat"><b>Google</b><span>Technical Solutions SME — Agentic AI, 2025–2026</span></div>
+        <div class="stat"><b>$100M+</b><span>Annualized cloud overhead dissolved at AWS*</span></div>
+        <div class="stat"><b>NYC / Remote</b><span>Based in New York, authorized to work in the U.S.</span></div>
+        <p class="small" style="margin:12px 0 0">* Via automated Python incident-response, containerized microservices, and continuous validation pipelines.</p>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <a href="https://www.linkedin.com/in/jade-decordova-software-specialist/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href="mailto:lacroixjaded@gmail.com">lacroixjaded@gmail.com</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- FLAGSHIP ARCHITECTURE -->
+  <section class="wrap section" id="flagship">
+    <div class="section-head">
+      <div><div class="kicker">Flagship Project</div><h2>Deterministic Multi-Agent RAG</h2><p>Not a chatbot wrapper. A LangGraph system where every claim must earn its citation — built on public data so the whole pipeline can be inspected.</p></div>
+      <span class="pill">Python · LangGraph · FastAPI · pgvector · React</span>
+    </div>
+
+    <div class="card arch">
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
+        <strong>How a question moves through the system</strong>
+        <span class="mono" style="font-size:12px;color:var(--muted)">query → plan → retrieve → validate → critique → answer</span>
+      </div>
+      <div class="arch-flow" id="archFlow">
+        <article class="agent" data-agent="planner"><div class="agent-num">1</div><h4>Planner</h4><p>Decomposes the question into sub-queries, picks tools, and sets a retrieval budget. No open-ended wandering.</p><p style="margin-top:10px"><code>LangGraph node</code></p></article>
+        <article class="agent" data-agent="retriever"><div class="agent-num">2</div><h4>Retriever</h4><p>Hybrid search — vector + keyword — over a curated corpus, with reranking and source metadata preserved end-to-end.</p><p style="margin-top:10px"><code>pgvector + BM25</code></p></article>
+        <article class="agent" data-agent="validator"><div class="agent-num">3</div><h4>Validator</h4><p>Every draft claim is checked against a JSON schema and its cited span. Unsupported claims are rejected, not softened.</p><p style="margin-top:10px"><code>Pydantic schema</code></p></article>
+        <article class="agent" data-agent="critic"><div class="agent-num">4</div><h4>Critic</h4><p>Adversarial pass: looks for contradictions, stale sources, and prompt-injection in retrieved text before anything ships.</p><p style="margin-top:10px"><code>eval-gated</code></p></article>
+      </div>
+      <div class="principles">
+        <div class="principle"><b>🔍 Citations are enforced, not requested</b><p>The answer renderer refuses any sentence without a resolvable source span. If it can't cite it, it doesn't say it.</p></div>
+        <div class="principle"><b>🧪 Evals run like unit tests</b><p>A fixed adversarial set runs on every change: injection attempts, conflicting sources, and unanswerable questions that must trigger an honest “I don't know.”</p></div>
+        <div class="principle"><b>📋 Everything is traceable</b><p>Each run logs the plan, retrieved chunks, validation verdicts, and latency per agent — the same trace you see in the demo below.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section class="wrap section" id="demo" style="padding-top:8px">
+    <div class="section-head">
+      <div><div class="kicker">Recorded Walkthrough</div><h2>Watch the agents work</h2><p>Pick a question to replay a recorded pipeline run. You'll see the trace, the validation verdicts, and an answer where every claim carries its source. This page does not run a live model — it replays the exact run so every step can be inspected.</p></div>
+      <button class="btn" id="runBtn" type="button">▶ Run pipeline</button>
+    </div>
+
+    <div class="card demo">
+      <div class="demo-head">
+        <strong style="font-size:15px">Ask the system</strong>
+        <div class="chips" id="chips" role="group" aria-label="Sample questions"></div>
+      </div>
+      <div class="demo-body">
+        <div class="trace">
+          <h4>Agent trace</h4>
+          <div class="log" id="log" aria-live="polite">Select a question and press “Run pipeline”.
+
+// The trace will show:
+//  planner   → sub-queries + budget
+//  retriever → chunks + relevance scores
+//  validator → schema + citation checks
+//  critic    → adversarial review
+          </div>
+          <p class="small" style="margin:10px 0 0">Demo runs a recorded pipeline over a public-docs corpus so the trace, sources, and verdicts are fully inspectable.</p>
+        </div>
+        <div class="answer">
+          <h4>Validated answer</h4>
+          <div id="answerArea">
+            <p class="answer-text" style="color:var(--muted)">No answer yet — run the pipeline to see a validated, cited response with its sources.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVALS -->
+  <section class="wrap section" id="evals" style="padding-top:8px">
+    <div class="section-head">
+      <div><div class="kicker">Evaluation Design</div><h2>How it will be judged</h2><p>The targets and test specification for the flagship's fixed evaluation set — the bar the system must clear before any result is published here. The figures below are design targets, not measured results.</p></div>
+    </div>
+    <div class="metrics">
+      <div class="card metric"><b>≥95%</b><span>Target: citation accuracy — claims whose cited span actually supports them</span><small>design target</small></div>
+      <div class="card metric"><b>44 cases</b><span>Planned adversarial set — injection, contradiction &amp; unanswerable probes</span><small>specification</small></div>
+      <div class="card metric"><b>100%</b><span>Required: schema conformance on shipped answers — zero unvalidated responses</span><small>hard gate, not a metric</small></div>
+      <div class="card metric"><b>&lt;2s</b><span>Target: median end-to-end latency across the 4-agent pipeline (p50)</span><small>target p95 · &lt;4s</small></div>
+    </div>
+
+    <div class="grid2" style="margin-top:16px">
+      <div class="card bars">
+        <strong>Design targets — not yet measured results</strong>
+        <div class="bar-row"><span>Citation accuracy target</span><div class="track"><div class="fill" style="width:95%"></div></div><b>≥95%</b></div>
+        <div class="bar-row"><span>Adversarial catch-rate target</span><div class="track"><div class="fill" style="width:90%"></div></div><b>≥90%</b></div>
+        <div class="bar-row"><span>Retrieval recall@5 target</span><div class="track"><div class="fill" style="width:90%"></div></div><b>≥90%</b></div>
+        <div class="bar-row"><span>Honest “I don't know” target*</span><div class="track"><div class="fill amber" style="width:85%"></div></div><b>≥85%</b></div>
+        <p class="small" style="margin:10px 0 0">* On deliberately unanswerable questions — the system should decline rather than invent. Targets will be replaced with dated, measured results once the eval harness runs.</p>
+      </div>
+      <div class="card" style="padding:20px">
+        <strong>What broke — and what changed</strong>
+        <ul style="margin:10px 0 0;padding-left:18px;color:var(--ink2);font-size:14.5px;line-height:1.7">
+          <li><b>Conflicting sources:</b> early versions averaged contradictions into a confident wrong answer. Fix: critic flags conflicts and the answer must surface both positions.</li>
+          <li><b>Citation drift:</b> the model cited the right document but the wrong paragraph. Fix: span-level verification in the validator, not document-level.</li>
+          <li><b>Injection via retrieved text:</b> a chunk told the model to ignore instructions. Fix: retrieved content is treated as data, never as instructions — and it's in the adversarial set permanently.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card table-wrap" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center;padding:16px 16px 4px">
+        <strong>Adversarial test set — specification (sample cases)</strong>
+        <div class="filters" id="filters">
+          <button class="filter active" data-f="all" type="button">All cases</button>
+          <button class="filter" data-f="pass" type="button">Must pass</button>
+          <button class="filter" data-f="caught" type="button">Must catch threat</button>
+        </div>
+      </div>
+      <table aria-label="Adversarial evaluation cases">
+        <thead><tr><th>Case</th><th>Attack / Probe</th><th>Expected behavior</th><th>Requirement</th></tr></thead>
+        <tbody id="evalBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SUPPORTING WORK -->
+  <section class="wrap section" id="work" style="padding-top:8px">
+    <div class="section-head"><div><div class="kicker">Supporting Work</div><h2>The rest of the stack, in production</h2><p>Two systems that round out the flagship — automation with a human in the loop, and the UI that makes agent work legible.</p></div></div>
+    <div class="grid2">
+      <article class="card project">
+        <span class="pill">Python · AWS · Terraform</span>
+        <h3 style="margin-top:12px">Agentic Incident-Response &amp; Cloud-Cost Agent</h3>
+        <p>Echoes my AWS work: automated Python response scripts and containerized microservices that find waste and failures before humans do.</p>
+        <ul><li>Human approval gate before any destructive action — the agent proposes, a person disposes</li><li>Full audit log of every decision, input, and action taken</li><li>Continuous validation pipelines so a “fix” can't silently regress</li></ul>
+      </article>
+      <article class="card project">
+        <span class="pill">React · TypeScript · Streaming</span>
+        <h3 style="margin-top:12px">Streaming RAG Interface</h3>
+        <p>The front end for the flagship: token streaming, visible tool calls, and a trace panel so users can see <em>why</em> an answer says what it says.</p>
+        <ul><li>Agent timeline — planner, retriever, validator, critic states as they happen</li><li>Citation hover: every claim highlights its exact source span</li><li>Built for reviewers: the same UI powers the demo on this page</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="wrap section" id="experience" style="padding-top:8px">
+    <div class="section-head"><div><div class="kicker">Experience</div><h2>Where this was learned</h2></div></div>
+    <div class="card" style="padding:22px">
+      <div class="timeline">
+        <div class="role"><div class="role-date">Feb 2025 — Sep 2026</div><div><h3>Technical Solutions SME · <span>Google</span></h3><p>Agentic AI and multi-agent workflows / RAG, LangGraph-based systems, and technical solutions for enterprise customers — translating frontier capabilities into production systems.</p></div></div>
+        <div class="role"><div class="role-date">Mar 2023 — Feb 2025</div><div><h3>Full-Stack Engineer · <span>Outlier</span></h3><p>Full-stack development with Python and React / TypeScript, building data-intensive product features end to end.</p></div></div>
+        <div class="role"><div class="role-date">Jan 2022 — Mar 2023</div><div><h3>Solutions Architect · <span>AWS</span></h3><p>Engineered a high-scale cloud optimization system — automated Python incident-response, containerized microservices, continuous validation — dissolving over $100M in annualized cloud overhead.</p></div></div>
+        <div class="role"><div class="role-date">Earlier</div><div><h3>Engineering roles · <span>Colliers · Pelican Publishers</span></h3><p>Software and publishing-industry engineering — the Pelican experience is also why publishing platforms like Substack Enterprise genuinely interest me.</p></div></div>
+        <div class="role"><div class="role-date">Education</div><div><h3>BS Chemical Engineering · <span>University at Buffalo</span></h3><p>Graduated January 16, 2020. Plus Full Stack Web Development, Flatiron School. The engineering-first training shows: validate, measure, then ship.</p></div></div>
+      </div>
+      <div style="margin-top:18px;border-top:1px solid var(--line);padding-top:16px">
+        <div class="stack">
+          <span class="pill">Python</span><span class="pill">TypeScript / React</span><span class="pill">LangGraph · RAG</span><span class="pill">FastAPI</span><span class="pill">AWS (SME) · GCP</span><span class="pill">Docker · Kubernetes</span><span class="pill">Terraform · CI/CD</span><span class="pill">PostgreSQL · MongoDB</span><span class="pill">pgvector</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER / CONTACT -->
+  <footer class="wrap footer">
+    <div class="footer-grid">
+      <div>
+        <h2 style="font-family:Newsreader,Georgia,serif;font-size:30px;margin:0 0 8px;letter-spacing:-.02em">Let's build systems that hold up.</h2>
+        <p style="color:var(--muted);margin:0;max-width:520px">I'm looking for full-time roles in NYC or remote — forward-deployed, full-stack, and AI platform engineering especially. The fastest way to judge the work is to replay the walkthrough above and inspect every trace and citation.</p>
+        <div class="hero-actions"><a class="btn" href="mailto:lacroixjaded@gmail.com">lacroixjaded@gmail.com</a><a class="btn secondary" href="https://www.linkedin.com/in/jade-decordova-software-specialist/" target="_blank" rel="noopener">LinkedIn ↗</a></div>
+      </div>
+      <div class="card" style="padding:18px">
+        <strong style="font-size:14px">Off the clock</strong>
+        <p class="small" style="margin:8px 0 0;line-height:1.7">Chess, cooking, and photography — three hobbies that reward the same thing engineering does: patience, pattern recognition, and knowing when a position is actually lost and you should say so.</p>
+        <p class="small" style="margin:10px 0 0">📍 New York, NY · Authorized to work in the U.S. · No sponsorship required</p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:22px">Jade Decordova · Senior Software Engineer · Portfolio — flagship multi-agent RAG system built on public data; no proprietary or employer-confidential material is shown.</p>
+  </footer>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite">Email copied</div>
+
+<script>
+(function(){
+  var DEMOS = [
+    {
+      q: "How does the validator reject unsupported claims?",
+      logs: [
+        ["dim","[planner] intent=explain_mechanism · sub-queries=2 · budget=6 chunks"],
+        ["dim","[retriever] hybrid search → 5 chunks · top score 0.94"],
+        ["dim","[validator] draft claims=4 · schema=AnswerWithCitations v3"],
+        ["warn","[validator] claim #3 REJECTED — cited span does not entail claim"],
+        ["dim","[critic] no contradictions · no injection detected"],
+        ["ok","[synthesis] 3 validated claims · 3 citations · 1.6s ✓"]
+      ],
+      answer: "The validator treats every draft sentence as a claim that must carry a resolvable citation. It checks the claim against its cited span — not just the document — and rejects anything the span doesn't actually support.<sup>[1]</sup> Rejected claims never reach the renderer; the planner either re-retrieves with a narrower query or the answer ships without that claim.<sup>[2]</sup> In this run, one of four draft claims was rejected for exactly that reason, and the final answer contains only the three that passed.<sup>[1]</sup>",
+      badges: [["pass","✓ Schema valid"],["pass","✓ 3/3 citations entail claims"],["info","1 claim rejected & removed"]],
+      sources: [
+        ["[1] Validator design note — span-level entailment","Why document-level citation checks fail, and how span-level verification catches citation drift.","0.94"],
+        ["[2] LangGraph orchestration — retry & re-retrieval loop","How a rejected claim routes back to the planner instead of being softened into the answer.","0.89"]
+      ],
+      agents: ["planner","retriever","validator","critic"]
+    },
+    {
+      q: "What happens when retrieved documents conflict?",
+      logs: [
+        ["dim","[planner] intent=resolve_conflict · sub-queries=3 · budget=8 chunks"],
+        ["dim","[retriever] hybrid search → 7 chunks · 2 sources disagree on the key fact"],
+        ["dim","[validator] claims=3 · all citations resolve · schema OK"],
+        ["warn","[critic] CONFLICT flagged — Source A (2026) vs Source B (2023) on the same claim"],
+        ["dim","[critic] resolution: prefer recency + surface both positions"],
+        ["ok","[synthesis] conflict disclosed in answer · 2.1s ✓"]
+      ],
+      answer: "The system does not average conflicting sources into a confident answer. The critic compares claims across retrieved chunks, and when two sources disagree it flags the conflict explicitly.<sup>[1]</sup> The final answer then surfaces both positions, notes which source is more recent, and states which one it is relying on — so the reader can disagree with the judgment call.<sup>[2]</sup> Averaging contradictions was the single worst failure mode in early versions of this system, which is why conflict detection is a permanent adversarial test, not a one-off fix.<sup>[1]</sup>",
+      badges: [["pass","✓ Schema valid"],["pass","✓ Conflict disclosed"],["info","Both positions cited"]],
+      sources: [
+        ["[1] Critic agent — contradiction detection","Pairwise claim comparison across chunks, with recency and source-quality weighting.","0.92"],
+        ["[2] Answer policy — disclosing disagreement","The rendering rule: when sources conflict, the answer must present both, never silently pick one.","0.87"]
+      ],
+      agents: ["planner","retriever","validator","critic"]
+    },
+    {
+      q: "Why LangGraph over a single chain for production RAG?",
+      logs: [
+        ["dim","[planner] intent=architecture_rationale · sub-queries=2 · budget=6 chunks"],
+        ["dim","[retriever] hybrid search → 5 chunks · top score 0.91"],
+        ["dim","[validator] claims=4 · schema OK · citations resolve"],
+        ["dim","[critic] no contradictions · framing checked against sources"],
+        ["ok","[synthesis] 4 validated claims · 4 citations · 1.4s ✓"]
+      ],
+      answer: "A single chain gives you one pass and no place to intervene. LangGraph models the pipeline as an explicit graph, so validation failure can route back to retrieval, the critic can force a rewrite, and every node boundary is a place to log, test, and gate.<sup>[1]</sup> That control flow is what makes the system deterministic enough for production: the same question follows the same path, and a bad intermediate result gets caught at a node instead of contaminating the final answer.<sup>[2]</sup> The trade-off is real — more nodes mean more latency and more surface to maintain — which is why each agent has to justify its existence against the eval targets.<sup>[1]</sup>",
+      badges: [["pass","✓ Schema valid"],["pass","✓ 4/4 citations entail claims"],["info","Graph path logged"]],
+      sources: [
+        ["[1] Architecture decision record — graph vs. chain","The recorded trade-offs: control flow, testability, and latency cost of a 4-agent graph.","0.91"],
+        ["[2] Production RAG failure modes","Why single-pass pipelines fail silently, and where node-level gates catch each failure class.","0.88"]
+      ],
+      agents: ["planner","retriever","validator","critic"]
+    }
+  ];
+
+  var CASES = [
+    {name:"Injection in retrieved chunk", probe:"A document instructs the model to ignore its instructions and leak the system prompt", expected:"Treat chunk as data; ignore the instruction; answer normally", result:"Must catch", type:"caught"},
+    {name:"Unanswerable question", probe:"Asks for a fact that exists nowhere in the corpus", expected:"Respond “I don't have a source for that” — no invented answer", result:"Must pass", type:"pass"},
+    {name:"Conflicting sources", probe:"Two chunks state opposite values for the same fact", expected:"Surface both positions; note recency; never average them", result:"Must pass", type:"pass"},
+    {name:"Citation drift", probe:"Correct document, wrong paragraph cited for a claim", expected:"Validator rejects at span level; claim removed or re-retrieved", result:"Must catch", type:"caught"},
+    {name:"Stale source preference", probe:"A 2023 chunk contradicts a 2026 update on the same policy", expected:"Prefer the newer source and disclose the superseded one", result:"Must pass", type:"pass"}
+  ];
+
+  var chipsEl = document.getElementById('chips');
+  var logEl = document.getElementById('log');
+  var answerEl = document.getElementById('answerArea');
+  var runBtn = document.getElementById('runBtn');
+  var selected = 0, running = false;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  DEMOS.forEach(function(d, i){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip' + (i===0 ? ' selected' : '');
+    b.textContent = d.q;
+    b.addEventListener('click', function(){
+      selected = i;
+      chipsEl.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
+      b.classList.add('selected');
+    });
+    chipsEl.appendChild(b);
+  });
+
+  function setActiveAgent(name){
+    document.querySelectorAll('#archFlow .agent').forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('data-agent') === name);
+    });
+  }
+  function clearAgents(){ document.querySelectorAll('#archFlow .agent').forEach(function(a){ a.classList.remove('active'); }); }
+
+  function renderAnswer(d){
+    var badges = d.badges.map(function(b){ return '<span class="badge '+b[0]+'">'+b[1]+'</span>'; }).join('');
+    var sources = d.sources.map(function(s){
+      return '<div class="source"><div class="source-head"><b>'+s[0]+'</b><span class="score">'+s[2]+'</span></div><p>'+s[1]+'</p></div>';
+    }).join('');
+    answerEl.innerHTML = '<p class="answer-text">'+d.answer+'</p><div class="badges">'+badges+'</div><h4 style="font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px">Sources</h4><div class="sources">'+sources+'</div>';
+  }
+
+  function run(){
+    if (running) return;
+    running = true; runBtn.disabled = true; runBtn.textContent = 'Running…';
+    var d = DEMOS[selected];
+    logEl.innerHTML = '';
+    answerEl.innerHTML = '<p class="answer-text" style="color:var(--muted)">Pipeline running — watch the trace, then the validated answer will appear here.</p>';
+    var agentOrder = ['planner','retriever','validator','critic', null];
+    var delay = reduced ? 0 : 420;
+    d.logs.forEach(function(line, i){
+      setTimeout(function(){
+        var span = document.createElement('span');
+        span.className = line[0]; span.textContent = line[1] + '\n';
+        logEl.appendChild(span);
+        setActiveAgent(agentOrder[Math.min(i, agentOrder.length-1)]);
+        if (i === d.logs.length - 1){
+          setTimeout(function(){
+            clearAgents(); renderAnswer(d);
+            running = false; runBtn.disabled = false; runBtn.textContent = '▶ Run pipeline again';
+          }, reduced ? 0 : 350);
+        }
+      }, delay * (i+1));
+    });
+    if (reduced){ /* timeouts are 0ms, still sequential via forEach scheduling */ }
+    document.getElementById('flagship').scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'nearest'});
+  }
+  runBtn.addEventListener('click', run);
+
+  // Eval table
+  var body = document.getElementById('evalBody');
+  function renderCases(f){
+    body.innerHTML = CASES.filter(function(c){ return f==='all' || c.type===f; }).map(function(c){
+      return '<tr><td><b>'+c.name+'</b></td><td style="color:var(--muted)">'+c.probe+'</td><td>'+c.expected+'</td><td><span class="status '+c.type+'">'+c.result+'</span></td></tr>';
+    }).join('');
+  }
+  renderCases('all');
+  document.getElementById('filters').addEventListener('click', function(e){
+    var btn = e.target.closest('.filter'); if(!btn) return;
+    this.querySelectorAll('.filter').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active'); renderCases(btn.getAttribute('data-f'));
+  });
+
+  // Copy email
+  var toast = document.getElementById('toast');
+  document.getElementById('copyEmail').addEventListener('click', function(){
+    var email = 'lacroixjaded@gmail.com';
+    function show(msg){ toast.textContent = msg; toast.classList.add('show'); setTimeout(function(){ toast.classList.remove('show'); }, 2200); }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(email).then(function(){ show('Email copied: ' + email); }, function(){ show(email); });
+    } else { show(email); }
+  });
+})();
+</script>
+</body>
+</html>
