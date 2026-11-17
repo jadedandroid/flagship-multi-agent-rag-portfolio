@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Trading Lab | Jade Decordova</title>
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+<header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="../index.html">Jade Decordova <span>· NYC</span></a><nav aria-label="Main navigation"><a href="../index.html">Projects</a><a href="flagship-rag.html">Flagship RAG</a><a href="payment-mcp.html">Payment MCP</a><a href="trading-lab.html">Trading Lab</a></nav><a class="button" href="mailto:lacroixjaded@gmail.com">Contact</a></div></header>
+<main class="wrap">
+  <header class="page-hero"><p class="eyebrow">PROJECT 05 · DATA APP · NEXT.JS + STREAMLIT + SQL</p><h1>A trading research lab that reports when nothing works.</h1><p class="lede">Cost-aware, delay-aware backtests of popular strategies, pre-registered predictions, and an execution pipeline, exposed through a multi-page Next.js site, a Streamlit workbench, and a SQL warehouse that runs on SQLite locally or Snowflake.</p><p class="notice">Research tooling, not investment advice. The website runs locally and needs Node and a SQL database, so it is shown here with screenshots rather than hosted on this static site.</p></header>
+
+  <section class="section"><p class="eyebrow">THE APP</p><h2>Three views of the same warehouse</h2>
+    <div class="shots">
+      <figure><img src="trading-lab/markets.png" alt="BTCUSDT 4-hour candlestick chart with SMA20 and SMA100 and volume" loading="lazy"><figcaption>Markets: candles, SMAs, volume, and strategy equity against buy and hold.</figcaption></figure>
+      <figure><img src="trading-lab/backtests.png" alt="Dense sortable table of backtest configurations" loading="lazy"><figcaption>Backtests: every config with in-sample and out-of-sample Sharpe, sortable and filterable.</figcaption></figure>
+      <figure><img src="trading-lab/analyst.png" alt="Analyst chat streaming an answer with the SQL that produced it" loading="lazy"><figcaption>Analyst: streamed answers (server-sent events) that expose the SQL behind them.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="section"><p class="eyebrow">STACK</p><h2>Where each skill shows up</h2><div class="tool-list">
+    <article><h3>Next.js 15, React 19, TypeScript</h3><p>App Router pages, server components querying SQL directly, Recharts candlesticks built from a custom bar shape, a sortable dense table, and a streaming chat client that parses SSE by hand.</p></article>
+    <article><h3>Node API routes</h3><p>Candles, backtests, equity curves, SSE chat, and an execution-status proxy with timeouts. Inputs are validated against an allowlist before they reach SQL.</p></article>
+    <article><h3>SQL and Snowflake</h3><p>One query layer, two backends: set the SNOWFLAKE_* variables and the site queries Snowflake instead of SQLite. The queries use a portable subset (bind parameters, CASE pivots), and DDL ships for both. The Snowflake path is written but untested without an account.</p></article>
+    <article><h3>Python, pandas, Streamlit</h3><p>The warehouse builder runs 284 strategy configs across in-sample, out-of-sample, and full periods. The Streamlit app reads the same tables and falls back to the active Snowpark session when deployed in Snowflake.</p></article>
+    <article><h3>Execution pipeline</h3><p>TradingView webhook, risk gate, task tracker with deduplication and stuck-task detection, and a broker adapter. The site polls its health and status.</p></article>
+    <article><h3>Honest evaluation</h3><p>Every strategy family is tested with costs, execution delay, block-bootstrap intervals, and a circular-shift null, against predictions written before the test.</p></article>
+  </div></section>
+
+  <section class="section"><p class="eyebrow">WHAT IT FOUND</p><h2>No edge after costs</h2>
+    <p>Across the pre-registered experiments, 21 of 26 predictions held. The substantive finding is negative: with a 10 bps cost, none of 71 textbook configurations on BTC 5-minute data had a positive out-of-sample Sharpe, LazyBear Squeeze Momentum and WaveTrend did not beat a random-timing null, and the Trend Trio was break-even before fees and negative after. Deliberately leaking future data inflated the Trend Trio Sharpe from about 0 to roughly +2.3 to +2.6, which is why the engine separates signal time from fill time.</p>
+    <p class="muted">Gold uses XAUTUSDT, a tokenized-gold proxy with only March to October 2026 of data, so its results are weaker evidence than the BTC runs.</p>
+  </section>
+</main><footer class="wrap footer"><a href="../index.html">← All projects</a><span>Jade Decordova · Portfolio</span></footer>
+</body></html>

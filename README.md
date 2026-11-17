@@ -7,6 +7,7 @@ The home page is a project directory. Detailed case studies use normal document 
 - `projects/flagship-rag.html` — queryable local RAG demo and adversarial evaluation.
 - `projects/cloud-remediation.html` — human-gated cloud remediation simulation design.
 - `projects/payment-mcp.html` — payment setup MCP design and safety boundary.
+- `projects/trading-lab.html` — trading research lab (Next.js, Streamlit, SQL/Snowflake) with screenshots in `projects/trading-lab/`.
 
 Shared presentation styles live in `site.css`.
 
